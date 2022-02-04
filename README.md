@@ -25,9 +25,9 @@ Foram incluídos diversos comentários para facilitar o entendimento do código.
 
 Principais comandos do django:
 
-- Para criar um projeto django utiliza o comando: django-admin startproject blog .
+- Para criar um projeto django utiliza o comando: django-admin startproject nome-do-projeto .
 
-- Para criar um app utiliza o comando dentro da pasta do projeto: python3 manage.py startapp contatos
+- Para criar um app utiliza o comando dentro da pasta do projeto: python3 manage.py startapp nome-do-app
 
 - Para criar as migrations utiliza o comando dentro da pasta do projeto: python3 manage.py makemigrations
 
