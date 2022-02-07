@@ -125,7 +125,7 @@ USE_TZ = True
 
 # definindo as pastas de arquivos estáticos
 STATIC_URL = 'static/'
-STATICFILES_DIRS = (BASE_DIR / 'static')
+STATICFILES_DIRS = (BASE_DIR / 'static',)
 
 # definindo as pastas de arquivos de mídia
 MEDIA_URL = 'media/'
@@ -144,3 +144,9 @@ MESSAGE_TAGS = {
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# adicionando o editor de texto summernote
+INSTALLED_APPS += ('django_summernote', )
+
+# ajuste para o summernote
+X_FRAME_OPTIONS = 'SAMEORIGIN'

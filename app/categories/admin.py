@@ -1,17 +1,17 @@
 from django.contrib import admin
+# importando as models do app
+from .models import Categoria
 
-from .models import Category # importando as models do app
 
-
-# definindo as configurações de exibição da Category na área administrativa
-class CategoryAdmin(admin.ModelAdmin):
+# definindo as configurações de exibição da Categoria na área administrativa
+class CategoriaAdmin(admin.ModelAdmin):
 
     # definindo as colunas a serem exibidas
-    list_display = ('id', 'name')
+    list_display = ('id', 'nome')
 
     # definindo em quais colunas serão colocados links de edição
-    list_display_links = ('id', 'name')
+    list_display_links = ('id', 'nome')
 
 
 # registrando as models para exibição na área administrativa
-admin.site.register(Category, CategoryAdmin)
+admin.site.register(Categoria, CategoriaAdmin)
