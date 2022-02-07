@@ -1,0 +1,48 @@
+<!-- extende o arquivo do template global base.html -->
+{% extends 'base.html' %}
+
+<!-- criando o bloco content a ser inserido no base.html -->
+{% block content %}
+
+<div class="card-columns mt-4">
+  <!-- iterando sobre o array de posts definido na view -->
+  {% for post in posts %}
+  <div class="card">
+    <!-- se existir imagem, adiciona no template -->
+    {% if post.imagem %}
+
+    <!-- inserindo o link para a página de detalhes na imagem -->
+    <a href="{% url 'post_details' post.id %}">
+      <!-- inserindo a imagem -->
+      <img
+        class="card-img-top"
+        src="{{ post.imagem.url }}"
+        alt="{{ post.titulo }}"
+      />
+    </a>
+    {% endif %}
+
+    <div class="card-body">
+      <h5 class="card-title">
+        <!-- inserindo o link para a página de detalhes no título do post -->
+        <a href="{% url 'post_details' post.id %}"> {{ post.titulo }} </a>
+      </h5>
+      <!-- inserindo o excerto do post -->
+      <p class="card-text">{{ post.excerto }}</p>
+      <p class="card-text"></p>
+
+      <div class="text-right">
+        <!-- inserindo o link para a página de detalhes no text 'Ler mais...' -->
+        <a
+          href="{% url 'post_details' post.id %}"
+          class="btn btn-outline-secondary"
+          >Ler mais...</a
+        >
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- carregando a paginação definida em partial/_pagination.html -->
+{% include 'partial/_pagination.html' %} {% endblock %}

@@ -1,0 +1,61 @@
+<!-- arquivo parcial com o menu do template global do sistema -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+  <div class="container">
+    <!-- adicionando o link para a url index -->
+    <a class="navbar-brand" href="{% url 'index' %}">Blog do Luiz</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarResponsive"
+      aria-controls="navbarResponsive"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <!-- adicionando o link para a url post_category -->
+          <a class="nav-link" href="{% url 'post_category' 'python' %}"
+            >Python</a
+          >
+        </li>
+        <li class="nav-item">
+          <!-- adicionando o link para a url post_category -->
+          <a class="nav-link" href="{% url 'post_category' 'django' %}"
+            >Django</a
+          >
+        </li>
+        <li class="nav-item">
+          <!-- adicionando o link para a url post_category -->
+          <a class="nav-link" href="{% url 'post_category' 'tecnologia' %}"
+            >Tecnologia</a
+          >
+        </li>
+        <li class="nav-item">
+          <!-- adicionando o link para a url post_category -->
+          <a class="nav-link" href="{% url 'post_category' 'sistemas' %}"
+            >Sistemas</a
+          >
+        </li>
+      </ul>
+      <!-- adicionando o formulário com action para url post_search -->
+      <form
+        class="form-inline my-2 my-lg-0 ml-lg-4"
+        action="{% url 'post_search' %}"
+      >
+        <input
+          name="termo"
+          value="{{ request.GET.termo }}"
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Pesquisar"
+          aria-label="Search"
+        />
+      </form>
+    </div>
+  </div>
+</nav>

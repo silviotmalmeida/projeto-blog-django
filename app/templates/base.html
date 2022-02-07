@@ -1,0 +1,30 @@
+<!-- arquivo de template global do sistema -->
+
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <!-- carregando o título definido nos templates -->
+    <title>{% block title %}{% endblock %}Blog do Luiz</title>
+
+    <!-- carregando o head definido em partial/_head.html -->
+    {% include 'partial/_head.html' %}
+  </head>
+
+  <body>
+    <!-- carregando o menu definido em partial/_nav.html -->
+    {% include 'partial/_nav.html' %}
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <!-- carregando o conteudo definido nos templates -->
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+
+    <!-- carregando o footer definido em partial/_footer.html -->
+    {% include 'partial/_footer.html' %}
+  </body>
+</html>

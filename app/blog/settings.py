@@ -125,7 +125,7 @@ USE_TZ = True
 
 # definindo as pastas de arquivos estáticos
 STATIC_URL = 'static/'
-STATICFILES_DIRS = (BASE_DIR / 'static',)
+STATICFILES_DIRS = (BASE_DIR / 'templates/static',)
 
 # definindo as pastas de arquivos de mídia
 MEDIA_URL = 'media/'
