@@ -1,6 +1,9 @@
 <!-- extende o arquivo do template global base.html -->
 {% extends 'base.html' %}
 
+<!-- carregando o módulo humanize do django para datas mais amigáveis -->
+{% load humanize %}
+
 <!-- criando o bloco content a ser inserido no base.html -->
 {% block content %}
 
@@ -20,6 +23,20 @@
         alt="{{ post.titulo }}"
       />
     </a>
+
+    <!-- senão utiliza a imagem default -->
+    {% else %}
+
+    <!-- inserindo o link para a página de detalhes na imagem -->
+    <a href="{% url 'post_details' post.id %}">
+      <!-- inserindo a imagem default -->
+      <img
+        class="card-img-top"
+        src="{{ '/media/pictures/default.jpg' }} "
+        alt="{{ post.titulo }}"
+      />
+    </a>
+
     {% endif %}
 
     <div class="card-body">
@@ -29,7 +46,17 @@
       </h5>
       <!-- inserindo o excerto do post -->
       <p class="card-text">{{ post.excerto }}</p>
-      <p class="card-text"></p>
+
+      <!-- inserindo a data e a quantidade de comentários do post -->
+      <!-- na data foi utilizado o humanize para aparecer as palavras hoje, ontem, etc -->
+      <!-- para obter o número de comentarios do post, foi utilizado post.comentario_set.count -->
+      <p class="card-text">
+        <small class="text-muted">
+          {{ post.data|naturalday|title }} | 
+          {{ post.comentario_set.count }} comentário(s) |
+          {{ post.id_categoria }}</small
+        >
+      </p>
 
       <div class="text-right">
         <!-- inserindo o link para a página de detalhes no text 'Ler mais...' -->

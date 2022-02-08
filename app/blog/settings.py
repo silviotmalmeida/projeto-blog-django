@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'posts',  # declarando o app posts
     'categories',  # declarando o app categories
     'comments',  # declarando o app comments
+    'django.contrib.humanize', # utilizando o módulo humanize, para obter datas mais amigáveis
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
