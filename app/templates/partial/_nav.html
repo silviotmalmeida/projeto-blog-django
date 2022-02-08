@@ -19,26 +19,32 @@
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <!-- adicionando o link para a url post_category -->
-          <a class="nav-link" href="{% url 'post_category' 'python' %}"
-            >Python</a
+          <a class="nav-link" href="{% url 'post_category' '1' %}"
+            >Categoria 1</a
           >
         </li>
         <li class="nav-item">
           <!-- adicionando o link para a url post_category -->
-          <a class="nav-link" href="{% url 'post_category' 'django' %}"
-            >Django</a
+          <a class="nav-link" href="{% url 'post_category' '2' %}"
+            >Categoria 2</a
           >
         </li>
         <li class="nav-item">
           <!-- adicionando o link para a url post_category -->
-          <a class="nav-link" href="{% url 'post_category' 'tecnologia' %}"
-            >Tecnologia</a
+          <a class="nav-link" href="{% url 'post_category' '3' %}"
+            >Categoria 3</a
           >
         </li>
         <li class="nav-item">
           <!-- adicionando o link para a url post_category -->
-          <a class="nav-link" href="{% url 'post_category' 'sistemas' %}"
-            >Sistemas</a
+          <a class="nav-link" href="{% url 'post_category' '4' %}"
+            >Categoria 4</a
+          >
+        </li>
+        <li class="nav-item">
+          <!-- adicionando o link para a url post_category -->
+          <a class="nav-link" href="{% url 'post_category' '5' %}"
+            >Categoria 5</a
           >
         </li>
       </ul>
@@ -48,7 +54,7 @@
         action="{% url 'post_search' %}"
       >
         <input
-          name="termo"
+          name="s"
           value="{{ request.GET.termo }}"
           class="form-control mr-sm-2"
           type="search"

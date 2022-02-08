@@ -49,11 +49,11 @@
 
       <!-- inserindo a data e a quantidade de comentários do post -->
       <!-- na data foi utilizado o humanize para aparecer as palavras hoje, ontem, etc -->
-      <!-- para obter o número de comentarios do post, foi utilizado post.comentario_set.count -->
+      <!-- para obter o número de comentarios publicados do post, foi utilizado um campo anotado, criado na view -->
       <p class="card-text">
         <small class="text-muted">
           {{ post.data|naturalday|title }} | 
-          {{ post.comentario_set.count }} comentário(s) |
+          {{ post.comentarios_publicados }} comentário(s) |
           {{ post.id_categoria }}</small
         >
       </p>
