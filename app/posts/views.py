@@ -20,7 +20,6 @@ from django.db.models import Q, Count, Case, When
 import random
 
 
-
 class PostIndex(ListView):
 
     # atribuindo a model a ser utilizada
@@ -43,7 +42,7 @@ class PostIndex(ListView):
 
         # qs = qs.select_related('categoria_post')
 
-        # filtrando por publicado=True e ordenando de forma decrescente por id 
+        # filtrando por publicado=True e ordenando de forma decrescente por id
         qs = qs.order_by('-id').filter(publicado=True)
 
         # criando um campo anotado para calcular os comentários publicados do post
@@ -62,15 +61,86 @@ class PostIndex(ListView):
 
 
 class PostSearch(PostIndex):
-    pass
+
+    # atribuindo o template a ser utilizado
+    template_name = 'posts/post_search.html'
+
+    # sobreescrevendo a query padrão do django
+    def get_queryset(self):
+
+        # obtendo o nome da categoria selecionada
+        search_text = self.request.GET.get('s')
+
+        # utilizando a qs já definida em PostIndex
+        qs = super().get_queryset()
+
+        # filtrando os resultados a partir do texto da busca
+        # se o atributo titulo contiver o texto da busca
+        # a partir da chave estrangeira id_autor, se o atibuto username da tabela User for igual o texto da busca
+        # se o atributo conteudo contiver o texto da busca
+        # se o atributo excerto contiver o texto da busca
+        # a partir da chave estrangeira id_categoria, se o atibuto nome da tabela Categoria contiver o texto da busca
+        qs = qs.filter(
+            Q(titulo__icontains=search_text) |
+            Q(id_autor__username__iexact=search_text) |
+            Q(conteudo__icontains=search_text) |
+            Q(excerto__icontains=search_text) |
+            Q(id_categoria__nome__icontains=search_text)     
+        )
+
+        # retornando a query
+        return qs
 
 
 class PostCategory(PostIndex):
-    pass
+
+    # atribuindo o template a ser utilizado
+    template_name = 'posts/post_category.html'
+
+    # sobreescrevendo a query padrão do django
+    def get_queryset(self):
+
+        # obtendo o nome da categoria selecionada
+        selected_category = self.kwargs.get('category', None)
+
+        # utilizando a qs já definida em PostIndex
+        qs = super().get_queryset()
+
+        # filtrando os resultados
+        # a partir da chave estrangeira id_categoria, utilizando o atributo nome da tabela Categoria como referência de comparação
+        qs = qs.filter(id_categoria__nome__iexact=selected_category)
+
+        # retornando a query
+        return qs
 
 
 class PostDetails(UpdateView):
-    pass
+
+    # atribuindo a model a ser utilizada
+    model = Post
+
+    # atribuindo o template a ser utilizado
+    template_name = 'posts/post_details.html'
+
+    # determinando o nome do objeto a ser passado ao template
+    context_object_name = 'post'
+    
+
+    # sobreescrevendo a query padrão do django
+    def get_queryset(self):
+
+        # obtendo o id do post selecionada
+        selected_post = self.kwargs.get('post', None)
+
+        # chamando o método da superclasse
+        qs = super().get_queryset()
+      
+        # filtrando por publicado=True e ordenando de forma decrescente por id
+        qs = qs.filter(selected_post)
+
+        # retornando a query
+        return qs
+
 
 
 # definindo a view loadtestdata
@@ -117,10 +187,9 @@ def loadtestdata(request):
 
         # cadastrando o novo comentário
         comentario = Comentario.objects.create(nome=f'Título do Comentário {x+1}', email=f'comentario{x+1}@email.com',
-                                   comentario=f'Text do Comentário {x+1}', publicado=True,
-                                   id_post=post, id_autor=user)
+                                               comentario=f'Text do Comentário {x+1}', publicado=True,
+                                               id_post=post, id_autor=user)
         comentario.save()
-
 
     # redirecionando para a página de index
     return redirect('index')

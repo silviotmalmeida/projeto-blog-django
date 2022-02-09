@@ -1,0 +1,5 @@
+<!-- extende o arquivo do index.html -->
+{% extends 'posts/index.html' %}
+
+<!-- definindo o title a ser inserido no base.html -->
+{% block title %}Busca: {{ request.GET.s }}{% endblock %}
