@@ -11,7 +11,7 @@ urlpatterns = [
     # definindo a url da página de busca de posts
     path('busca/', views.PostSearch.as_view(), name='post_search'),
     # definindo a url da página de detalhes do post
-    path('post/<int:id>', views.PostDetails.as_view(), name='post_details'),
+    path('post/<int:pk>', views.PostDetails.as_view(), name='post_details'),
 
     # definindo a url para carregamento de dados de teste
     path('loadtestdata', views.loadtestdata, name='loadtestdata'),

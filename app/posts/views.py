@@ -10,6 +10,8 @@ from .models import Post
 from categories.models import Categoria
 from comments.models import Comentario
 
+from comments.forms import FormComentario
+
 # importando a model User da área administrativa do django
 from django.contrib.auth.models import User
 
@@ -123,23 +125,14 @@ class PostDetails(UpdateView):
     template_name = 'posts/post_details.html'
 
     # determinando o nome do objeto a ser passado ao template
+    # o template vai utilizar como referencia de consulta o atributo pk da URL
     context_object_name = 'post'
-    
 
-    # sobreescrevendo a query padrão do django
-    def get_queryset(self):
+    # determinando o formulário a ser exibido
+    form_class = FormComentario
 
-        # obtendo o id do post selecionada
-        selected_post = self.kwargs.get('post', None)
 
-        # chamando o método da superclasse
-        qs = super().get_queryset()
-      
-        # filtrando por publicado=True e ordenando de forma decrescente por id
-        qs = qs.filter(selected_post)
 
-        # retornando a query
-        return qs
 
 
 
