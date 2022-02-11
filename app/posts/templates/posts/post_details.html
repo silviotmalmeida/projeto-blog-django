@@ -6,7 +6,7 @@
 
 <!-- criando o bloco content a ser inserido no base.html -->
 {% block content %}
- 
+
 <!-- inserindo os dados do post -->
 <div class="row pt-5">
   <div class="col-xl"></div>
@@ -24,7 +24,7 @@
 
 <div class="row pt-5">
   <div class="col-xl"></div>
-    <div class="col-xl-8">  
+  <div class="col-xl-8">
     <!-- inserindo a imagem -->
     <!-- se existir imagem cadastrada, adiciona no template -->
     <!-- senão utiliza a imagem default -->
@@ -40,28 +40,51 @@
   <div class="col-xl"></div>
 </div>
 
+<!-- se existirem comentários a serem publicados no post -->
+{% if comments %}
+<div class="row pt-5">
+  <div class="col-xl"></div>
+  <div class="col-xl-8">
+    <!-- exibindo a quantidade de comentários -->
+    <h2 class="my-3">Comentário(s) ({{ comments.count }})</h2>
+
+    <!-- iterando no array de comentários -->
+    {% for comentario in comments %}
+
+    <!-- exibindo os dados dos comentários -->
+    <h5 class="mb-2 mt-5">{{ comentario.nome }} disse:</h5>
+    <small class="text-muted">{{ comentario.data }}</small>
+    <p class="mb-1">{{ comentario.comentario }}</p>
+
+    {% endfor %}
+  </div>
+  <div class="col-xl"></div>
+</div>
+{% endif %}
+
 <div class="row pt-5">
   <div class="col-xl"></div>
   <div class="col-xl-8">
     <h2 class="my-3">Deixe um comentário</h2>
 
-        <form method="POST" action="#envia_comentario">
-            {% csrf_token %}
-            <table class="table">
-
-                {{ form }}
-                <tr>
-                    <td colspan="2">
-                        <input
-                            id="envia_comentario"
-                            type="submit"
-                            class="btn btn-primary"
-                            value="Enviar"
-                        />
-                    </td>
-                </tr>
-            </table>
-        </form>
+    <form method="POST" action="#envia_comentario">
+      {% csrf_token %}
+      <table class="table">
+        {{ form }}
+        <tr>
+          <td colspan="2">
+            <!-- incluindo o campo de mensagens -->
+            {% include 'partial/_messages.html' %}
+            <input
+              id="envia_comentario"
+              type="submit"
+              class="btn btn-primary"
+              value="Enviar"
+            />
+          </td>
+        </tr>
+      </table>
+    </form>
   </div>
   <div class="col-xl"></div>
 </div>

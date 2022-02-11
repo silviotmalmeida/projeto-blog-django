@@ -6,22 +6,27 @@ from django.views.generic.edit import UpdateView
 
 # importando a model Post
 from .models import Post
-
+# importando a model Categoria
 from categories.models import Categoria
+# importando a model Comentario
 from comments.models import Comentario
-
-from comments.forms import FormComentario
-
 # importando a model User da área administrativa do django
 from django.contrib.auth.models import User
 
+# importando o formulario de Comentario
+from comments.forms import FormComentario
+
 # dependências para querys complexas
 from django.db.models import Q, Count, Case, When
+
+# bilbioteca de mensagens do django
+from django.contrib import messages
 
 # biblioteca de números aleatórios
 import random
 
 
+# criando a view PostIndex
 class PostIndex(ListView):
 
     # atribuindo a model a ser utilizada
@@ -35,6 +40,20 @@ class PostIndex(ListView):
 
     # determinando o nome do objeto a ser passado ao template
     context_object_name = 'posts'
+
+    # sobreescrevendo o método do django de criação do contexto
+    def get_context_data(self, **kwargs):
+
+        # obtendo o contexto padrão da superclasse
+        context = super().get_context_data(**kwargs)
+
+        # obtendo as categorias cadastradas
+        categories = Categoria.objects.all()
+
+        # adicionando as categorias no contexto do template
+        context['categories'] = categories
+
+        return context
 
     # sobreescrevendo a query padrão do django
     def get_queryset(self):
@@ -62,6 +81,7 @@ class PostIndex(ListView):
         return qs
 
 
+# criando a view PostSearch
 class PostSearch(PostIndex):
 
     # atribuindo o template a ser utilizado
@@ -87,13 +107,14 @@ class PostSearch(PostIndex):
             Q(id_autor__username__iexact=search_text) |
             Q(conteudo__icontains=search_text) |
             Q(excerto__icontains=search_text) |
-            Q(id_categoria__nome__icontains=search_text)     
+            Q(id_categoria__nome__icontains=search_text)
         )
 
         # retornando a query
         return qs
 
 
+# criando a view PostCategoria
 class PostCategory(PostIndex):
 
     # atribuindo o template a ser utilizado
@@ -116,6 +137,7 @@ class PostCategory(PostIndex):
         return qs
 
 
+# criando a view PostDetails
 class PostDetails(UpdateView):
 
     # atribuindo a model a ser utilizada
@@ -128,12 +150,52 @@ class PostDetails(UpdateView):
     # o template vai utilizar como referencia de consulta o atributo pk da URL
     context_object_name = 'post'
 
+    # sobreescrevendo o método do django de criação do contexto
+    def get_context_data(self, **kwargs):
+
+        # obtendo o contexto padrão da superclasse
+        context = super().get_context_data(**kwargs)
+
+        # obtendo os dados do post atual
+        post = self.get_object()
+
+        # obtendo os comentários a serem publicados para o post
+        comments = Comentario.objects.filter(publicado=True, id_post = post.id)
+
+        # adicionando os comentarios no contexto do template
+        context['comments'] = comments
+
+        return context
+
     # determinando o formulário a ser exibido
     form_class = FormComentario
 
+    # sobreescrevendo o método do django de submissão do formulário
+    def form_valid(self, form):
 
+        # obtendo os dados do post atual
+        post = self.get_object()
 
+        # inserindo os dados do formulário em um objeto Comentario
+        comentario = Comentario(**form.cleaned_data)
 
+        # inserindo os dados do post no objeto formulário
+        comentario.id_post = post
+
+        # se o usuário estiver logado
+        if self.request.user.is_authenticated:
+
+            # inserindo os dados do usuário no objeto formulário
+            comentario.id_autor = self.request.user
+
+        # salvando o comentário no BD
+        comentario.save()
+
+        # enviando mensagem de sucesso
+        messages.success(self.request, 'Comentário enviado com sucesso.')
+
+        # redirecionando para a página do post
+        return redirect('post_details', pk=post.id)
 
 
 # definindo a view loadtestdata
@@ -180,7 +242,7 @@ def loadtestdata(request):
 
         # cadastrando o novo comentário
         comentario = Comentario.objects.create(nome=f'Título do Comentário {x+1}', email=f'comentario{x+1}@email.com',
-                                               comentario=f'Text do Comentário {x+1}', publicado=True,
+                                               comentario=f'Texto do Comentário {x+1}', publicado=True,
                                                id_post=post, id_autor=user)
         comentario.save()
 
