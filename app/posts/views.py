@@ -14,7 +14,7 @@ from comments.models import Comentario
 from django.contrib.auth.models import User
 
 # importando o formulario de Comentario
-from comments.forms import FormComentario
+from comments.forms import FormComentario, FormComentarioLoggedUser
 
 # dependências para querys complexas
 from django.db.models import Q, Count, Case, When
@@ -165,10 +165,24 @@ class PostDetails(UpdateView):
         # adicionando os comentarios no contexto do template
         context['comments'] = comments
 
+        # obtendo as categorias cadastradas
+        categories = Categoria.objects.all()
+
+        # adicionando as categorias no contexto do template
+        context['categories'] = categories
+
         return context
 
-    # determinando o formulário a ser exibido
-    form_class = FormComentario
+    # sobreescrevendo o método do django de seleção do formulário a ser apresentado
+    def get_form_class(self):
+        
+        # se o usuário estiver logado
+        if self.request.user.is_authenticated:
+            # retorna o formulário só com o campo para comentário
+            return FormComentarioLoggedUser
+        else:
+            # retorna o formulário com os campos para nome, email e comentário
+            return FormComentario
 
     # sobreescrevendo o método do django de submissão do formulário
     def form_valid(self, form):
@@ -186,7 +200,8 @@ class PostDetails(UpdateView):
         if self.request.user.is_authenticated:
 
             # inserindo os dados do usuário no objeto formulário
-            comentario.id_autor = self.request.user
+            comentario.nome = self.request.user.username
+            comentario.email = self.request.user.email
 
         # salvando o comentário no BD
         comentario.save()
@@ -211,7 +226,7 @@ def loadtestdata(request):
         user.save()
 
     # criando as categorias
-    for x in range(5):
+    for x in range(10):
         # cadastrando a nova categoria
         categoria = Categoria.objects.create(nome=f'Categoria {x+1}')
         categoria.save()
@@ -223,7 +238,7 @@ def loadtestdata(request):
         user = User.objects.get(id=random.randint(1, 5))
 
         # sorteando uma categoria aleatória
-        categoria = Categoria.objects.get(id=random.randint(1, 5))
+        categoria = Categoria.objects.get(id=random.randint(1, 10))
 
         # cadastrando o novo post
         post = Post.objects.create(titulo=f'Título do Post {x+1}', conteudo=f'Conteúdo do Post {x+1}',
@@ -237,13 +252,10 @@ def loadtestdata(request):
         # sorteando um post aleatório
         post = Post.objects.get(id=random.randint(1, 30))
 
-        # sorteando um usuário aleatório
-        user = User.objects.get(id=random.randint(1, 5))
-
         # cadastrando o novo comentário
-        comentario = Comentario.objects.create(nome=f'Título do Comentário {x+1}', email=f'comentario{x+1}@email.com',
+        comentario = Comentario.objects.create(nome=f'Comentador {x+1}', email=f'comentador{x+1}@email.com',
                                                comentario=f'Texto do Comentário {x+1}', publicado=True,
-                                               id_post=post, id_autor=user)
+                                               id_post=post)
         comentario.save()
 
     # redirecionando para a página de index

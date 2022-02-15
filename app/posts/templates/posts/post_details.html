@@ -1,6 +1,12 @@
 <!-- extende o arquivo do template global base.html -->
 {% extends 'base.html' %}
 
+<!-- carregando o módulo humanize do django para datas mais amigáveis -->
+{% load humanize %}
+
+<!-- carregando o módulo de filtros personalizados -->
+{% load myfilters %}
+
 <!-- definindo o title a ser inserido no base.html -->
 {% block title %}{{ post.titulo|title }}{% endblock %}
 
@@ -15,7 +21,7 @@
     <h5>{{ post.excerto }}</h5>
     <p class="text-muted mt-4">
       <small>
-        {{ post.id_autor }} | {{ post.data }} | {{ post.id_categoria }}
+        {{ post.id_autor }} | {{ post.data|naturalday|title }} | {{ post.id_categoria }}
       </small>
     </p>
   </div>
@@ -37,7 +43,9 @@
     <!-- inserindo conteúdo do post, proveniente do summernote -->
     {{ post.conteudo|safe }}
   </div>
-  <div class="col-xl"></div>
+  <div class="col-xl">
+    
+  </div>
 </div>
 
 <!-- se existirem comentários a serem publicados no post -->
@@ -46,7 +54,7 @@
   <div class="col-xl"></div>
   <div class="col-xl-8">
     <!-- exibindo a quantidade de comentários -->
-    <h2 class="my-3">Comentário(s) ({{ comments.count }})</h2>
+    <h2 class="my-3">{{ comments.count|plural_comentarios }}</h2>
 
     <!-- iterando no array de comentários -->
     {% for comentario in comments %}

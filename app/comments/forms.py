@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from .models import Comentario
 
 
-# definindo o formulário
+# definindo o formulário para usuários não logados
 class FormComentario(ModelForm):
 
     # sobreescrevendo o método de validação do formulário
@@ -38,3 +38,31 @@ class FormComentario(ModelForm):
 
         # definindo os campos a serem considerados
         fields = ('nome', 'email', 'comentario')
+
+
+# definindo o formulário para usuários logados
+class FormComentarioLoggedUser(ModelForm):
+
+    # sobreescrevendo o método de validação do formulário
+    def clean(self):
+
+        # obtém os dados do formulário
+        form_data = self.cleaned_data
+
+        comment = form_data.get('comentario')
+
+        # inserindo validações personalizadas
+        if len(comment) < 15:
+            self.add_error(
+                'comentario',
+                'O comentário precisa ter ao menos 15 caracteres.'
+            )
+
+    # definindo a estrutura do formulário
+    class Meta:
+
+        # definindo a model do formulário
+        model = Comentario
+
+        # definindo os campos a serem considerados
+        fields = ('comentario',)

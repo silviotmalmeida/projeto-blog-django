@@ -19,49 +19,41 @@
           >Categorias</a
         >
         <div class="dropdown-menu">
-          <a
-            class="dropdown-item"
-            href="{% url 'post_category' 'Categoria 1' %}"
-            >Categoria 1</a
-          >
-          <a
-            class="dropdown-item"
-            href="{% url 'post_category' 'Categoria 2' %}"
-            >Categoria 2</a
-          >
-          <a
-            class="dropdown-item"
-            href="{% url 'post_category' 'Categoria 3' %}"
-            >Categoria 3</a
-          >
-          <a
-            class="dropdown-item"
-            href="{% url 'post_category' 'Categoria 4' %}"
-            >Categoria 4</a
-          >
-          <a
-            class="dropdown-item"
-            href="{% url 'post_category' 'Categoria 5' %}"
-            >Categoria 5</a
-          >
-        </div>
-      </li>    
+          <!-- se existirem categorias cadastradas -->
+          {% if categories %}
 
+          <!-- iterando no array de categorias -->
+          {% for categoria in categories %}
+
+          <a
+            class="dropdown-item"
+            href="{% url 'post_category' categoria.nome %}"
+            >{{ categoria.nome }}</a
+          >
+
+          {% endfor %}
+
+          <!-- senão, insere opção genérica -->
+          {% else%}
+
+          <a class="dropdown-item" href="{% url 'index' %}">Sem categorias</a>
+          {% endif %}
+        </div>
+      </li>
     </ul>
     <!-- adicionando o formulário com action para url post_search -->
     <form
-    class="form-inline my-2 my-lg-0 ml-lg-4"
-    action="{% url 'post_search' %}"
-  >
-    <input
-      name="s"
-      value="{{ request.GET.termo }}"
-      class="form-control mr-sm-2"
-      type="search"
-      placeholder="Pesquisar"
-      aria-label="Search"
-    />
-  </form>
+      class="form-inline my-2 my-lg-0 ml-lg-4"
+      action="{% url 'post_search' %}"
+    >
+      <input
+        name="s"
+        value="{{ request.GET.termo }}"
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Pesquisar"
+        aria-label="Search"
+      />
+    </form>
   </div>
-
 </nav>

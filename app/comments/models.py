@@ -29,7 +29,7 @@ class Comentario(models.Model):
     id_post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='Post')
 
     # criando o atributo id_autor com referência à model User, opcional, sem deleção em castaca
-    id_autor = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name='Autor')
+    # id_autor = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name='Autor')
 
     # definindo qual atributo da model será exibido na área administrativa
     def __str__(self):

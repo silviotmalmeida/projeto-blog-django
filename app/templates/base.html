@@ -4,7 +4,7 @@
 <html lang="pt">
   <head>
     <!-- carregando o título definido nos templates -->
-    <title>{% block title %}{% endblock %}</title>
+    <title>Blog {% block title %}{% endblock %}</title>
 
     <!-- carregando o head definido em partial/_head.html -->
     {% include 'partial/_head.html' %}
@@ -12,7 +12,8 @@
 
   <body>
     <!-- carregando o menu definido em partial/_nav.html -->
-    {% block nav %}{% endblock %}
+    
+    {% include 'partial/_nav.html' %}
 
     <!-- Page Content -->
     <div class="container">
