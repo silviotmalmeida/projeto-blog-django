@@ -21,7 +21,8 @@
     <h5>{{ post.excerto }}</h5>
     <p class="text-muted mt-4">
       <small>
-        {{ post.id_autor }} | {{ post.data|naturalday|title }} | {{ post.id_categoria }}
+        {{ post.id_autor }} | {{ post.data|naturalday|title }} | {{
+        post.id_categoria }}
       </small>
     </p>
   </div>
@@ -43,9 +44,7 @@
     <!-- inserindo conteúdo do post, proveniente do summernote -->
     {{ post.conteudo|safe }}
   </div>
-  <div class="col-xl">
-    
-  </div>
+  <div class="col-xl"></div>
 </div>
 
 <!-- se existirem comentários a serem publicados no post -->
@@ -70,28 +69,51 @@
 </div>
 {% endif %}
 
+<!-- formulário para submissão dos comentários -->
 <div class="row pt-5">
   <div class="col-xl"></div>
   <div class="col-xl-8">
     <h2 class="my-3">Deixe um comentário</h2>
 
+    <!-- criando o formulário -->
     <form method="POST" action="#envia_comentario">
+      <!-- artifício do django para segurança de formulários -->
       {% csrf_token %}
-      <table class="table">
-        {{ form }}
-        <tr>
-          <td colspan="2">
-            <!-- incluindo o campo de mensagens -->
-            {% include 'partial/_messages.html' %}
-            <input
-              id="envia_comentario"
-              type="submit"
-              class="btn btn-primary"
-              value="Enviar"
-            />
-          </td>
-        </tr>
-      </table>
+
+      <div class="form-group">
+        <!-- iterando sobre os campos invisíveis do formulário -->
+        {% for hidden_field in form.hidden_fields %}
+        <!-- exibindo as tags -->
+        {{ hidden_field.label_tag }} <br />
+        <!-- exibindo os campos -->
+        {{ hidden_field }} <br />
+        <!-- exibindo as mensagens de erro -->
+        {{ hidden_field.errors }} <br />
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <!-- iterando sobre os campos visíveis do formulário -->
+        {% for visible_field in form.visible_fields %}
+        <!-- exibindo as tags -->
+        {{ visible_field.label_tag }} <br />
+        <!-- exibindo os campos -->
+        {{ visible_field }} <br />
+        <!-- exibindo as mensagens de erro -->
+        {{ visible_field.errors }} <br />
+        {% endfor %}
+      </div>
+
+      <td colspan="2">
+        <!-- incluindo o campo de mensagens -->
+        {% include 'partial/_messages.html' %}
+        <input
+          id="envia_comentario"
+          type="submit"
+          class="btn btn-primary"
+          value="Enviar"
+        />
+      </td>
     </form>
   </div>
   <div class="col-xl"></div>

@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
+# dependências básicas de renderização e redirecionamento
+from django.shortcuts import render, redirect, get_object_or_404
 
 # dependencias para possibilitar a utilização das Class Based Views
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
+from django.views import View
 
 # importando a model Post
 from .models import Post
@@ -12,16 +14,12 @@ from categories.models import Categoria
 from comments.models import Comentario
 # importando a model User da área administrativa do django
 from django.contrib.auth.models import User
-
-# importando o formulario de Comentario
+# importando os formulários de Comentario
 from comments.forms import FormComentario, FormComentarioLoggedUser
-
 # dependências para querys complexas
 from django.db.models import Q, Count, Case, When
-
 # bilbioteca de mensagens do django
 from django.contrib import messages
-
 # biblioteca de números aleatórios
 import random
 
@@ -61,7 +59,9 @@ class PostIndex(ListView):
         # chamando o método da superclasse
         qs = super().get_queryset()
 
-        # qs = qs.select_related('categoria_post')
+        # incrementando na consulta os dados da categoria para melhorar a performance,
+        # visto que informações da categoria serão exibidos no template
+        qs = qs.select_related('id_categoria')
 
         # filtrando por publicado=True e ordenando de forma decrescente por id
         qs = qs.order_by('-id').filter(publicado=True)
@@ -138,7 +138,94 @@ class PostCategory(PostIndex):
 
 
 # criando a view PostDetails
-class PostDetails(UpdateView):
+# utilizando como superclasse a View Genérica
+class PostDetails(View):
+
+    # atribuindo o template a ser utilizado
+    template_name = 'posts/post_details.html'
+
+    # definindo o método reponsável por criar o contexto
+    def setup(self, request, *args, **kwargs):
+
+        # utilizando o método da superclasse
+        super().setup(request, *args, **kwargs)
+
+        # obtendo o valor do atributo pk na URL
+        pk = self.kwargs.get('pk')
+
+        # obtendo o objeto Post relativo ao pk requisitado e que esteja ṕublicado
+        # se o mesmo não existir ou estiver publicado, retorna erro 404
+        post = get_object_or_404(Post, pk=pk, publicado=True)
+
+        # se o usuário estiver logado
+        if request.user.is_authenticated:
+            # retorna o formulário só com o campo para comentário
+            form = FormComentarioLoggedUser(request.POST or None)
+        else:
+            # retorna o formulário com os campos para nome, email e comentário
+            # o request.POST utiliza os dados presentes na requisição para preencher o formulário
+            form = FormComentario(request.POST or None)
+
+        # inserindo os dados no contexto
+        self.context = {
+            # o objeto Post
+            'post': post,
+
+            # os comentários relativos ao post e que estiverem publicados
+            'comments': Comentario.objects.filter(id_post=post,
+                                                  publicado=True),
+
+            # o formulário
+            'form':form,
+
+            # as categorias para popular o menu
+            'categories': Categoria.objects.all()        
+        }
+
+    # definindo o método responsável por responder solicitações GET
+    def get(self, request, *args, **kwargs):
+
+        # renderiza a página definida no template, passando o contexto definido no setup
+        return render(request, self.template_name, self.context)
+
+    # definindo o método responsável por responder solicitações POST 
+    def post(self, request, *args, **kwargs):
+
+        # obtendo os dados do formulário
+        form = self.context['form']
+
+        # se a validação do formulário falhar
+        if not form.is_valid():
+
+            # renderiza novamente a página, sem salvar os dados no BD
+            return render(request, self.template_name, self.context)
+
+        # inserindo os dados do formulário em um objeto Comentario
+        comentario = form.save(commit=False)
+
+        # inserindo os dados do post no objeto formulário
+        comentario.id_post = self.context['post']
+
+        # se o usuário estiver logado
+        if request.user.is_authenticated:
+            # inserindo os dados do usuário no objeto formulário
+            comentario.nome = request.user.username
+            comentario.email = request.user.email
+
+        # salvando o comentário no BD
+        comentario.save()
+
+        # enviando mensagem de sucesso
+        messages.success(request, 'Seu comentário foi enviado para moderação.')
+
+        # redirecionando para a página do post
+        return redirect('post_details', pk=self.kwargs.get('pk'))
+
+
+# criando a view PostDetails
+# utilizando como superclasse a UpdateView
+# foi renomeada para PostDetails2
+class PostDetails2(UpdateView):
 
     # atribuindo a model a ser utilizada
     model = Post
@@ -160,7 +247,7 @@ class PostDetails(UpdateView):
         post = self.get_object()
 
         # obtendo os comentários a serem publicados para o post
-        comments = Comentario.objects.filter(publicado=True, id_post = post.id)
+        comments = Comentario.objects.filter(publicado=True, id_post=post.id)
 
         # adicionando os comentarios no contexto do template
         context['comments'] = comments
@@ -175,7 +262,7 @@ class PostDetails(UpdateView):
 
     # sobreescrevendo o método do django de seleção do formulário a ser apresentado
     def get_form_class(self):
-        
+
         # se o usuário estiver logado
         if self.request.user.is_authenticated:
             # retorna o formulário só com o campo para comentário
@@ -198,7 +285,6 @@ class PostDetails(UpdateView):
 
         # se o usuário estiver logado
         if self.request.user.is_authenticated:
-
             # inserindo os dados do usuário no objeto formulário
             comentario.nome = self.request.user.username
             comentario.email = self.request.user.email
@@ -207,7 +293,7 @@ class PostDetails(UpdateView):
         comentario.save()
 
         # enviando mensagem de sucesso
-        messages.success(self.request, 'Comentário enviado com sucesso.')
+        messages.success(self.request, 'Seu comentário foi enviado para moderação.')
 
         # redirecionando para a página do post
         return redirect('post_details', pk=post.id)
@@ -215,7 +301,7 @@ class PostDetails(UpdateView):
 
 # definindo a view loadtestdata
 # tem a função de carregar uma massa de dados de teste
-def loadtestdata(request):
+def loadtestdata():
 
     # criando os usuários
     for x in range(5):

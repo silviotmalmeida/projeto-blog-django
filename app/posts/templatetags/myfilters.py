@@ -1,4 +1,4 @@
-# arquivo com filtros criados para a aplicação
+# arquivo com filtros personalizados criados para a utilização nos templates
 
 # importação default
 from django import template
@@ -38,5 +38,5 @@ def plural_comentarios(num_comentarios):
 
     # em caso de exceção
     except:
-        # exobe o texto de forma genérica
+        # exibe o texto de forma genérica
         return f'{num_comentarios} comentário(s)'
