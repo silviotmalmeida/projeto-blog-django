@@ -147,7 +147,7 @@ class PostDetails(View):
     # definindo o método reponsável por criar o contexto
     def setup(self, request, *args, **kwargs):
 
-        # utilizando o método da superclasse
+        # utilizando as definições da superclasse
         super().setup(request, *args, **kwargs)
 
         # obtendo o valor do atributo pk na URL

@@ -15,6 +15,12 @@ class PostAdmin(SummernoteModelAdmin):
     # definindo em quais colunas serão colocados links de edição
     list_display_links = ('id', 'titulo')
 
+    # definindo o limite de registros por página
+    list_per_page = 10
+
+    # definindo as colunas a serem consideradas no campo de pesquisa
+    search_fields = ('titulo',)
+
     # definindo as colunas liberadas para ediçao na tela de listagem
     list_editable = ('publicado',)
 

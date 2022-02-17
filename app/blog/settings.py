@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'categories',  # declarando o app categories
     'comments',  # declarando o app comments
     'django.contrib.humanize', # utilizando o módulo humanize, para obter datas mais amigáveis
+    'crispy_forms', # utilizando o módulo para formatação automática de formulários
+    'axes', # utilizando o módulo para melhorar a segurança do controle de acesso da aplicação
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware', # utilizando o módulo para melhorar a segurança do controle de acesso da aplicação
 ]
 
 ROOT_URLCONF = 'blog.urls'
@@ -151,3 +154,23 @@ INSTALLED_APPS += ('django_summernote', )
 
 # ajuste para o summernote
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# ajuste para o crispy_forms, definindo a versão do bootstrap utilizada no projeto
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# ajuste para o axes
+AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# artifício para permitir a utilização de configurações locais
+try:
+    # se existir o arquivo local_settings, sobreescreve as informações do settings
+    from .local_settings import *
+except:
+    #senão ignora
+    pass

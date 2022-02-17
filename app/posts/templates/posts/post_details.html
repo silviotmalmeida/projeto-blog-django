@@ -4,6 +4,9 @@
 <!-- carregando o módulo humanize do django para datas mais amigáveis -->
 {% load humanize %}
 
+<!-- carregando o módulo de formatação de formulários -->
+{% load crispy_forms_tags %}
+
 <!-- carregando o módulo de filtros personalizados -->
 {% load myfilters %}
 
@@ -79,30 +82,18 @@
     <form method="POST" action="#envia_comentario">
       <!-- artifício do django para segurança de formulários -->
       {% csrf_token %}
-
-      <div class="form-group">
+      
         <!-- iterando sobre os campos invisíveis do formulário -->
-        {% for hidden_field in form.hidden_fields %}
-        <!-- exibindo as tags -->
-        {{ hidden_field.label_tag }} <br />
+        {% for hidden_field in form.hidden_fields %}        
         <!-- exibindo os campos -->
-        {{ hidden_field }} <br />
-        <!-- exibindo as mensagens de erro -->
-        {{ hidden_field.errors }} <br />
-        {% endfor %}
-      </div>
-
-      <div class="form-group">
+        {{ hidden_field|as_crispy_field }}        
+        {% endfor %}    
+      
         <!-- iterando sobre os campos visíveis do formulário -->
-        {% for visible_field in form.visible_fields %}
-        <!-- exibindo as tags -->
-        {{ visible_field.label_tag }} <br />
+        {% for visible_field in form.visible_fields %}        
         <!-- exibindo os campos -->
-        {{ visible_field }} <br />
-        <!-- exibindo as mensagens de erro -->
-        {{ visible_field.errors }} <br />
-        {% endfor %}
-      </div>
+        {{ visible_field|as_crispy_field }}        
+        {% endfor %}      
 
       <td colspan="2">
         <!-- incluindo o campo de mensagens -->

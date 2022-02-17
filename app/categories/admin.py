@@ -9,6 +9,12 @@ class CategoriaAdmin(admin.ModelAdmin):
     # definindo as colunas a serem exibidas
     list_display = ('id', 'nome')
 
+    # definindo o limite de registros por página
+    list_per_page = 10
+
+    # definindo as colunas a serem consideradas no campo de pesquisa
+    search_fields = ('nome',)
+
     # definindo em quais colunas serão colocados links de edição
     list_display_links = ('id', 'nome')
 

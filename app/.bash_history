@@ -37,3 +37,7 @@ exit
 cd /root/
 python3 manage.py createsuperuser
 exit
+pip3 install --upgrade django-crispy-forms
+exit
+pip3 install django-axes
+exit

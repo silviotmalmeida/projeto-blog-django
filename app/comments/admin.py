@@ -12,6 +12,12 @@ class ComentarioAdmin(admin.ModelAdmin):
     # definindo em quais colunas serão colocados links de edição
     list_display_links = ('id', 'nome')
 
+    # definindo o limite de registros por página
+    list_per_page = 10
+
+    # definindo as colunas a serem consideradas no campo de pesquisa
+    search_fields = ('nome', 'email',)
+
     # definindo as colunas liberadas para ediçao na tela de listagem
     list_editable = ('publicado',)
 
