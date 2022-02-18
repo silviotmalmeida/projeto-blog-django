@@ -14,6 +14,8 @@ sudo docker run -it ubuntu:20.04
 
     pip3 install django-axes
 
+    pip3 install requests
+
     exit
 
 sudo docker commit (id do container obtido em sudo docker ps -a) blog-django

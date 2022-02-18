@@ -95,7 +95,9 @@
         {{ visible_field|as_crispy_field }}        
         {% endfor %}      
 
-      <td colspan="2">
+        <!-- exibindo o recaptcha -->
+        <div class="g-recaptcha" data-sitekey="6Ldq7ogeAAAAAKJCJo7x0rFNZbObr7dL9EfEX7Lj"></div><br>
+
         <!-- incluindo o campo de mensagens -->
         {% include 'partial/_messages.html' %}
         <input
