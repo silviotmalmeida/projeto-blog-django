@@ -176,10 +176,10 @@ class PostDetails(View):
                                                   publicado=True),
 
             # o formulário
-            'form':form,
+            'form': form,
 
             # as categorias para popular o menu
-            'categories': Categoria.objects.all()        
+            'categories': Categoria.objects.all()
         }
 
     # definindo o método responsável por responder solicitações GET
@@ -188,7 +188,7 @@ class PostDetails(View):
         # renderiza a página definida no template, passando o contexto definido no setup
         return render(request, self.template_name, self.context)
 
-    # definindo o método responsável por responder solicitações POST 
+    # definindo o método responsável por responder solicitações POST
     def post(self, request, *args, **kwargs):
 
         # obtendo os dados do formulário
@@ -293,7 +293,8 @@ class PostDetails2(UpdateView):
         comentario.save()
 
         # enviando mensagem de sucesso
-        messages.success(self.request, 'Seu comentário foi enviado para moderação.')
+        messages.success(
+            self.request, 'Seu comentário foi enviado para moderação.')
 
         # redirecionando para a página do post
         return redirect('post_details', pk=post.id)
@@ -301,7 +302,7 @@ class PostDetails2(UpdateView):
 
 # definindo a view loadtestdata
 # tem a função de carregar uma massa de dados de teste
-def loadtestdata():
+def loadtestdata(request):
 
     # criando os usuários
     for x in range(5):
@@ -326,8 +327,11 @@ def loadtestdata():
         # sorteando uma categoria aleatória
         categoria = Categoria.objects.get(id=random.randint(1, 10))
 
+        # definindo o texto do conteúdo do post
+        post_content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+
         # cadastrando o novo post
-        post = Post.objects.create(titulo=f'Título do Post {x+1}', conteudo=f'Conteúdo do Post {x+1}',
+        post = Post.objects.create(titulo=f'Título do Post {x+1}', conteudo=f'Conteúdo do Post {x+1} : {post_content}',
                                    excerto=f'Excerto do Post {x+1}', publicado=True,
                                    id_autor=user, id_categoria=categoria)
         post.save()
@@ -338,9 +342,12 @@ def loadtestdata():
         # sorteando um post aleatório
         post = Post.objects.get(id=random.randint(1, 30))
 
+        # definindo o texto do comentário do post
+        comentario_content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+
         # cadastrando o novo comentário
         comentario = Comentario.objects.create(nome=f'Comentador {x+1}', email=f'comentador{x+1}@email.com',
-                                               comentario=f'Texto do Comentário {x+1}', publicado=True,
+                                               comentario=f'Texto do Comentário {x+1} : {comentario_content}', publicado=True,
                                                id_post=post)
         comentario.save()
 

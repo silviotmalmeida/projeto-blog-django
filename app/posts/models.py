@@ -54,8 +54,10 @@ class Post(models.Model):
         # utilizando as definições da superclasse
         super().save(*args, **kwargs)
         
-        # processando a imagem submetida
-        self.resize_image(self.imagem, 800)
+        if self.imagem:
+
+            # processando a imagem submetida
+            self.resize_image(self.imagem, 800)
 
     # criando método estático para processamento da imagem do post
     @staticmethod

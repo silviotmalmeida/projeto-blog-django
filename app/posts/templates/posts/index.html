@@ -24,7 +24,7 @@
       <!-- senão utiliza a imagem default -->
       <img
         class="card-img-top"
-        src="{% if post.imagem %}{{ post.imagem.url }}{% else %}{{ '/media/pictures/default.jpg' }}{% endif %}"
+        src="{% if post.imagem %}{{ post.imagem.url }}{% else %}{{ '/media/default.jpg' }}{% endif %}"
         alt="{{ post.titulo }}"
       />
     </a>

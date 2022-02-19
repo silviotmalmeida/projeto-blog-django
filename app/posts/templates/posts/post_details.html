@@ -24,8 +24,7 @@
     <h5>{{ post.excerto }}</h5>
     <p class="text-muted mt-4">
       <small>
-        {{ post.id_autor }} | {{ post.data|naturalday|title }} | {{
-        post.id_categoria }}
+        {{ post.id_autor }} | {{ post.data|naturalday|title }} | {{ post.id_categoria }}
       </small>
     </p>
   </div>
@@ -40,9 +39,9 @@
     <!-- senão utiliza a imagem default -->
     <img
       class="img-fluid pb-5"
-      src="{% if post.imagem %}{{ post.imagem.url }}{% else %}{{ '/media/pictures/default.jpg' }}{% endif %}"
+      src="{% if post.imagem %}{{ post.imagem.url }}{% else %}{{ '/media/default.jpg' }}{% endif %}"
       alt="{{ post.titulo_post }}"
-    />
+    /><br>
 
     <!-- inserindo conteúdo do post, proveniente do summernote -->
     {{ post.conteudo|safe }}
